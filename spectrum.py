@@ -4,6 +4,7 @@ from spectral_cube import SpectralCube
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
+import pyspeckit
 
 tmax=fits.getdata('H2CO_303_202_out.fits')
 #get tmax map to find brightest pixel
@@ -32,11 +33,24 @@ a[:, ymax, xmax]
 #plt.plot(a[:, ymax, xmax].value) gives you spectrum 
 a1=a.to(u.K, equivalencies=a.beam.jtok_equiv(a.header['RESTFRQ']*u.Hz))
 #gets a in K instead of Jy, need equivalencies as K~Jy/beam
-
 plt.plot(velocity, a1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
-plt.savefig('H2CO_303_202_brightspectrum.png')
+plt.savefig('H2CO_303_202_brightspectrum.pdf')
+
+#fit a gaussian to the line
+asp=pyspeckit.Spectrum(data=a1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
+aamp=a1[:, ymax, xmax].value.max()
+#amplitude guess
+acenter=(a1[:, ymax, xmax].value*velocity).sum()/a1[:, ymax, xmax].value.sum()
+#center guess
+awidth=a1[:, ymax, xmax].value.sum()/aamp/np.sqrt(2*np.pi)
+#width guess
+aguess=[aamp, acenter, awidth]
+asp.specfit(fittype='gaussian', guesses=aguess)
+asp.plotter(errstyle='fill')
+asp.specfit.plot_fit()
+asp.write('H2CO_303_202_fittedspectrum.fits', type='fits')
 
 
 #now find spectra for other lines of H2CO at same position
@@ -46,7 +60,17 @@ b1=b.to(u.K, equivalencies=b.beam.jtok_equiv(b.header['RESTFRQ']*u.Hz))
 plt.plot(velocity, b1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
-plt.savefig('H2CO_322_221_brightspectrum.png')
+plt.savefig('H2CO_322_221_brightspectrum.pdf')
+
+bsp=pyspeckit.Spectrum(data=b1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
+bamp=b1[:, ymax, xmax].value.max()
+bcenter=(b1[:, ymax, xmax].value*velocity).sum()/b1[:, ymax, xmax].value.sum()
+bwidth=b1[:, ymax, xmax].value.sum()/bamp/np.sqrt(2*np.pi)
+bguess=[bamp, bcenter, bwidth]
+bsp.specfit(fittype='gaussian', guesses=bguess)
+bsp.plotter(errstyle='fill')
+bsp.specfit.plot_fit()
+bsp.write('H2CO_322_221_fittedspectrum.fits', type='fits')
 
 plt.clf()
 c=SpectralCube.read('H2CO_321_220.fits')
@@ -54,6 +78,16 @@ c1=c.to(u.K, equivalencies=c.beam.jtok_equiv(c.header['RESTFRQ']*u.Hz))
 plt.plot(velocity, c1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
-plt.savefig('H2CO_321_220_brightspectrum.png')
+plt.savefig('H2CO_321_220_brightspectrum.pdf')
 
+
+csp=pyspeckit.Spectrum(data=c1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
+camp=c1[:, ymax, xmax].value.max()
+ccenter=(c1[:, ymax, xmax].value*velocity).sum()/c1[:, ymax, xmax].value.sum()
+cwidth=c1[:, ymax, xmax].value.sum()/camp/np.sqrt(2*np.pi)
+cguess=[camp, ccenter, cwidth]
+csp.specfit(fittype='gaussian', guesses=cguess)
+csp.plotter(errstyle='fill')
+csp.specfit.plot_fit()
+csp.write('H2CO_321_220_fittedspectrum.fits', type='fits')
 

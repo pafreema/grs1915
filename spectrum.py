@@ -50,7 +50,7 @@ aguess=[aamp, acenter, awidth]
 asp.specfit(fittype='gaussian', guesses=aguess)
 asp.plotter(errstyle='fill')
 asp.specfit.plot_fit()
-asp.write('H2CO_303_202_fittedspectrum.fits', type='fits')
+asp.plotter.savefig('H2CO_303_202_fittedspectrum.pdf')
 
 
 #now find spectra for other lines of H2CO at same position
@@ -70,7 +70,7 @@ bguess=[bamp, bcenter, bwidth]
 bsp.specfit(fittype='gaussian', guesses=bguess)
 bsp.plotter(errstyle='fill')
 bsp.specfit.plot_fit()
-bsp.write('H2CO_322_221_fittedspectrum.fits', type='fits')
+bsp.plotter.savefig('H2CO_322_221_fittedspectrum.pdf')
 
 plt.clf()
 c=SpectralCube.read('H2CO_321_220.fits')
@@ -89,5 +89,5 @@ cguess=[camp, ccenter, cwidth]
 csp.specfit(fittype='gaussian', guesses=cguess)
 csp.plotter(errstyle='fill')
 csp.specfit.plot_fit()
-csp.write('H2CO_321_220_fittedspectrum.fits', type='fits')
+csp.plotter.savefig('H2CO_321_220_fittedspectrum.pdf')
 

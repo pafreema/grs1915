@@ -32,19 +32,21 @@ a[:, ymax, xmax]
 #slice so you get entire spectrum at specific x and y, returns array of values
 #plt.plot(a[:, ymax, xmax].value) gives you spectrum 
 a1=a.to(u.K, equivalencies=a.beam.jtok_equiv(a.header['RESTFRQ']*u.Hz))
+a2=a1.with_spectral_unit(u.km/u.s)
 #gets a in K instead of Jy, need equivalencies as K~Jy/beam
 plt.plot(velocity, a1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
 plt.savefig('H2CO_303_202_brightspectrum.pdf')
+print(a1.spectral_axis)
 
 #fit a gaussian to the line
-asp=pyspeckit.Spectrum(data=a1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
-aamp=a1[:, ymax, xmax].value.max()
+asp=pyspeckit.Spectrum(data=a2[:, ymax, xmax].value, xarr=a2.spectral_axis, xarrkwargs={'unit':'km/s'}, unit="$T_B$")
+aamp=a2[:, ymax, xmax].value.max()
 #amplitude guess
-acenter=(a1[:, ymax, xmax].value*velocity).sum()/a1[:, ymax, xmax].value.sum()
+acenter=(a2[:, ymax, xmax].value*velocity).sum()/a2[:, ymax, xmax].value.sum()
 #center guess
-awidth=a1[:, ymax, xmax].value.sum()/aamp/np.sqrt(2*np.pi)
+awidth=a2[:, ymax, xmax].value.sum()/aamp/np.sqrt(2*np.pi)
 #width guess
 aguess=[aamp, acenter, awidth]
 asp.specfit(fittype='gaussian', guesses=aguess)
@@ -52,20 +54,20 @@ asp.plotter(errstyle='fill')
 asp.specfit.plot_fit()
 asp.plotter.savefig('H2CO_303_202_fittedspectrum.pdf')
 
-
 #now find spectra for other lines of H2CO at same position
 plt.clf()
 b=SpectralCube.read('H2CO_322_221.fits')
 b1=b.to(u.K, equivalencies=b.beam.jtok_equiv(b.header['RESTFRQ']*u.Hz))
+b2=b1.with_spectral_unit(u.km/u.s)
 plt.plot(velocity, b1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
 plt.savefig('H2CO_322_221_brightspectrum.pdf')
 
-bsp=pyspeckit.Spectrum(data=b1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
-bamp=b1[:, ymax, xmax].value.max()
-bcenter=(b1[:, ymax, xmax].value*velocity).sum()/b1[:, ymax, xmax].value.sum()
-bwidth=b1[:, ymax, xmax].value.sum()/bamp/np.sqrt(2*np.pi)
+bsp=pyspeckit.Spectrum(data=b2[:, ymax, xmax].value, xarr=b2.spectral_axis, xarrkwargs={'unit':'km/s'}, unit="$T_B$")
+bamp=b2[:, ymax, xmax].value.max()
+bcenter=(b2[:, ymax, xmax].value*velocity).sum()/b2[:, ymax, xmax].value.sum()
+bwidth=b2[:, ymax, xmax].value.sum()/bamp/np.sqrt(2*np.pi)
 bguess=[bamp, bcenter, bwidth]
 bsp.specfit(fittype='gaussian', guesses=bguess)
 bsp.plotter(errstyle='fill')
@@ -75,19 +77,21 @@ bsp.plotter.savefig('H2CO_322_221_fittedspectrum.pdf')
 plt.clf()
 c=SpectralCube.read('H2CO_321_220.fits')
 c1=c.to(u.K, equivalencies=c.beam.jtok_equiv(c.header['RESTFRQ']*u.Hz))
+c2=c1.with_spectral_unit(u.km/u.s)
 plt.plot(velocity, c1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
 plt.savefig('H2CO_321_220_brightspectrum.pdf')
 
 
-csp=pyspeckit.Spectrum(data=c1[:, ymax, xmax].value, xarr=velocity, xarrkwargs={'unit':'km/s'})
-camp=c1[:, ymax, xmax].value.max()
-ccenter=(c1[:, ymax, xmax].value*velocity).sum()/c1[:, ymax, xmax].value.sum()
-cwidth=c1[:, ymax, xmax].value.sum()/camp/np.sqrt(2*np.pi)
+csp=pyspeckit.Spectrum(data=c2[:, ymax, xmax].value, xarr=c2.spectral_axis, xarrkwargs={'unit':'km/s'}, unit="$T_B$")
+camp=c2[:, ymax, xmax].value.max()
+ccenter=(c2[:, ymax, xmax].value*velocity).sum()/c2[:, ymax, xmax].value.sum()
+cwidth=c2[:, ymax, xmax].value.sum()/camp/np.sqrt(2*np.pi)
 cguess=[camp, ccenter, cwidth]
 csp.specfit(fittype='gaussian', guesses=cguess)
 csp.plotter(errstyle='fill')
 csp.specfit.plot_fit()
 csp.plotter.savefig('H2CO_321_220_fittedspectrum.pdf')
+
 

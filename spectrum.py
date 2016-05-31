@@ -38,7 +38,6 @@ plt.plot(velocity, a1[:, ymax, xmax].value)
 plt.xlabel(r'$v$ (km s$^{-1}$)')
 plt.ylabel(r'$T_b$ (K)')
 plt.savefig('H2CO_303_202_brightspectrum.pdf')
-print(a1.spectral_axis)
 
 #fit a gaussian to the line
 asp=pyspeckit.Spectrum(data=a2[:, ymax, xmax].value, xarr=a2.spectral_axis, xarrkwargs={'unit':'km/s'}, unit="$T_B$")
@@ -53,6 +52,7 @@ asp.specfit(fittype='gaussian', guesses=aguess)
 asp.plotter(errstyle='fill')
 asp.specfit.plot_fit()
 asp.plotter.savefig('H2CO_303_202_fittedspectrum.pdf')
+#asp.specfit.modelpars/modelerrs give parameters and errors of spectrum fit
 
 #now find spectra for other lines of H2CO at same position
 plt.clf()
@@ -94,4 +94,5 @@ csp.plotter(errstyle='fill')
 csp.specfit.plot_fit()
 csp.plotter.savefig('H2CO_321_220_fittedspectrum.pdf')
 
+print(asp.specfit.modelpars, asp.specfit.modelerrs, bsp.specfit.modelpars, bsp.specfit.modelerrs, csp.specfit.modelpars, csp.specfit.modelerrs)
 

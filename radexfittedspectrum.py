@@ -59,9 +59,10 @@ c2=c1.with_spectral_unit(u.Hz)
 #combine three lines into one spectrum by concatenating numpy arrays, y-y axis,x-x axis 
 y=np.concatenate((a2[:, ymax, xmax].value, b2[:, ymax, xmax].value, c2[:, ymax, xmax].value))
 x=np.concatenate((a2.spectral_axis.value, b2.spectral_axis.value, c2.spectral_axis.value))
+x1=units.Quantity(x, 'Hz')
 #need to take only values in concatenation and add units with the spectrum below
 
-sp=pyspeckit.Spectrum(data=y, xarr=x, xarrkwargs={'unit':'Hz'}, unit="$T_B$ (K)")
+sp=pyspeckit.Spectrum(data=y, xarr=x1, xarrkwargs={'unit':'Hz'}, unit="$T_B$ (K)")
 
 #add (register) fitters to the spectrum - try with 'both' fit
 sp.Registry.add_fitter('formaldehyde_mm_radex', formaldehyde_radex_fitter_both, 5)

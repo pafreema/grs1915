@@ -58,7 +58,7 @@ c2=c1.with_spectral_unit(u.Hz)
 #combine three lines into one spectrum by concatenating numpy arrays, y-y axis,x-x axis 
 y=np.concatenate((a2[:, ymax, xmax].value, b2[:, ymax, xmax].value, c2[:, ymax, xmax].value))
 x=np.concatenate((a2.spectral_axis.value, b2.spectral_axis.value, c2.spectral_axis.value))
-#need to take only values in concatenation and add units with the spectrum below
+#need to take only values in concatenation and add units with xarrkwargs below
 x /= 1e9
 sp=pyspeckit.Spectrum(data=y, xarr=x, unit="$T_B$ (K)",xarrkwargs={'unit':'GHz'})
 

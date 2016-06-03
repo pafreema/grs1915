@@ -26,13 +26,13 @@ hdrb=pyfits.getheader('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_p
 
 #fit the 303-202 and 322-221 lines
 #tex/tau grid sets frequency range (in GHz) over which frequency range is valid 
-formaldehyde_radex_fitter_b=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.2, 218.3, texgrid1b), (218.4, 218.55, texgrid2b)), taugrid=((218.2, 218.3, taugrid1b), (218.4, 218.55, taugrid2b)), hdr=hdrb, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
+formaldehyde_radex_fitter_b=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.1, 218.2, texgrid1b), (218.4, 218.55, texgrid2b)), taugrid=((218.1, 218.2, taugrid1b), (218.4, 218.55, taugrid2b)), hdr=hdrb, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
 
 #fit the 303-202 and 321-220 lines
-formaldehyde_radex_fitter_a=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.2, 218.3, texgrid1a), (218.7, 218.8, texgrid2a)), taugrid=((218.2, 218.3, taugrid1a), (218.7, 218.8, taugrid2a)), hdr=hdra, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
+formaldehyde_radex_fitter_a=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.1, 218.2, texgrid1a), (218.7, 218.8, texgrid2a)), taugrid=((218.1, 218.2, taugrid1a), (218.7, 218.8, taugrid2a)), hdr=hdra, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
 
 #fit all three lines
-formaldehyde_radex_fitter_both=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.2, 218.3, texgrid1b), (218.4, 218.55, texgrid2b), (218.7, 218.8, texgrid2a)), taugrid=((218.2, 218.3, taugrid1b), (218.4, 218.55, taugrid2b), (218.7, 218.8, taugrid2a)), hdr=hdrb, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
+formaldehyde_radex_fitter_both=models.model.SpectralModel(models.formaldehyde_mm.formaldehyde_mm_radex, 5, parnames=['temperature', 'column', 'density', 'center', 'width'], parvalues=[50,12,4.5,0,1], parlimited=[(True, True), (True, True), (True, True), (False, False), (True, False)], parlimits=[(5,205), (10,17), (2,7), (0,0), (0,0)], parsteps=[0.01, 0.01, 0.1, 0, 0], fitunits='Hz', texgrid=((218.1, 218.2, texgrid1b), (218.4, 218.55, texgrid2b), (218.7, 218.8, texgrid2a)), taugrid=((218.1, 218.2, taugrid1b), (218.4, 218.55, taugrid2b), (218.7, 218.8, taugrid2a)), hdr=hdrb, shortvarnames=("T", "N", "n", "v", "\\sigma"), grid_vwidth=5.0)
 
 #?? if __name__="__main__":
 datadir = '/mnt/fastdata/pafreema/'
@@ -71,7 +71,7 @@ sp.Registry.add_fitter('formaldehyde_mm_radex_b', formaldehyde_radex_fitter_b, 5
 sp.plotter(figure=1)
 sp.specfit(fittype='formaldehyde_mm_radex', guesses=[95, 13.2, 4.5, 67, 7.0], limits=[(20,200), (11,15), (3,5.5), (65,70), (2,15)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
 #only change center parameter from example
-sp.plotter.savefig('H2CO_all_radexfittry2.pdf')
+sp.plotter.savefig('H2CO_all_radexfit.pdf')
 
 #plot fit for 303-202 and 321-220 ('a')
 sp.plotter(figure=2)

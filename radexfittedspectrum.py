@@ -69,16 +69,16 @@ sp.Registry.add_fitter('formaldehyde_mm_radex_b', formaldehyde_radex_fitter_b, 5
 
 #plot fit for all 3 ('both')
 sp.plotter(figure=1)
-sp.specfit(fittype='formaldehyde_mm_radex', guesses=[95, 13.2, 4.5, 67, 7.0], limits=[(20,200), (11,15), (3,5.5), (65,70), (2,15)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
+sp.specfit(fittype='formaldehyde_mm_radex', guesses=[95, 12.5, 4.5, 67, 5.0], limits=[(50,250), (11,15), (3,5.5), (65,70), (0.5,10)], limited=[(True, True)]*5, fixed=[True, False, False, False, False])
 #only change center parameter from example
 sp.plotter.savefig('H2CO_all_radexfit.pdf')
 
 #plot fit for 303-202 and 321-220 ('a')
 sp.plotter(figure=2)
-sp.specfit(fittype='formaldehyde_mm_radex_a', guesses=[95,13.2,4.5,67,7.0], limits=[(20,200), (11,15), (3,5.5), (65,70), (2,15)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
+sp.specfit(fittype='formaldehyde_mm_radex_a', guesses=[95,12.5,4.5,67,5.0], limits=[(50,250), (11,15), (3,5.5), (65,70), (0.5,10)], limited=[(True, True)]*5, fixed=[True, False, False, False, False])
 sp.plotter.savefig('H2CO_303_202_321_220_radexfit.pdf')
 
 #plot fit for 303-202 and 322-221 ('b')
 sp.plotter(figure=3)
-sp.specfit(fittype='formaldehyde_mm_radex_b', guesses=[95,13.2,4.5,67,7.0], limits=[(20,200), (11,15), (3,5.5), (65,70), (2,15)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
+sp.specfit(fittype='formaldehyde_mm_radex_b', guesses=[95,12.5,4.5,67,5.0], limits=[(50,250), (11,15), (3,5.5), (65,70), (0.5,10)], limited=[(True, True)]*5, fixed=[True, False, False, False, False])
 sp.plotter.savefig('H2CO_303_202_322_221_radexfit.pdf')

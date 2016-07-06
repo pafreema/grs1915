@@ -10,17 +10,17 @@ from astropy.table import Table
 
 #read in model grids to create H2CO radex fitter
 #grids use the radex program to calculate brightness of H2CO under different conditions
-texgrid1a=pyfits.getdata('/mnt/fastdata/pafreema/303-202_321-220_5kms_temperature_para_tex1.fits')
-taugrid1a=pyfits.getdata('/mnt/fastdata/pafreema/303-202_321-220_5kms_temperature_para_tau1.fits')
-texgrid2a=pyfits.getdata('/mnt/fastdata/pafreema/303-202_321-220_5kms_temperature_para_tex2.fits')
-taugrid2a=pyfits.getdata('/mnt/fastdata/pafreema/303-202_321-220_5kms_temperature_para_tau2.fits')
-hdra=pyfits.getheader('/mnt/fastdata/pafreema/303-202_321-220_5kms_temperature_para_tau2.fits')
+texgrid1a=pyfits.getdata('/mnt/bigdata/pafreema/303-202_321-220_5kms_temperature_para_tex1.fits')
+taugrid1a=pyfits.getdata('/mnt/bigdata/pafreema/303-202_321-220_5kms_temperature_para_tau1.fits')
+texgrid2a=pyfits.getdata('/mnt/bigdata/pafreema/303-202_321-220_5kms_temperature_para_tex2.fits')
+taugrid2a=pyfits.getdata('/mnt/bigdata/pafreema/303-202_321-220_5kms_temperature_para_tau2.fits')
+hdra=pyfits.getheader('/mnt/bigdata/pafreema/303-202_321-220_5kms_temperature_para_tau2.fits')
 
-texgrid1b=pyfits.getdata('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_para_tex1.fits')
-taugrid1b=pyfits.getdata('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_para_tau1.fits')
-texgrid2b=pyfits.getdata('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_para_tex2.fits')
-taugrid2b=pyfits.getdata('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_para_tau2.fits')
-hdrb=pyfits.getheader('/mnt/fastdata/pafreema/303-202_322-221_5kms_temperature_para_tau2.fits')
+texgrid1b=pyfits.getdata('/mnt/bigdata/pafreema/303-202_322-221_5kms_temperature_para_tex1.fits')
+taugrid1b=pyfits.getdata('/mnt/bigdata/pafreema/303-202_322-221_5kms_temperature_para_tau1.fits')
+texgrid2b=pyfits.getdata('/mnt/bigdata/pafreema/303-202_322-221_5kms_temperature_para_tex2.fits')
+taugrid2b=pyfits.getdata('/mnt/bigdata/pafreema/303-202_322-221_5kms_temperature_para_tau2.fits')
+hdrb=pyfits.getheader('/mnt/bigdata/pafreema/303-202_322-221_5kms_temperature_para_tau2.fits')
 
 #models.formaldehyde.formaldehyde_radex is the model that we are going to fit 
 #models.model.SpectralModel is a wrapper to deal with parinfo, multiple peaks, and annotations
@@ -41,16 +41,16 @@ ymax, xmax=np.unravel_index(np.argmax(data*tmax), tmax.shape)
 
 a=SpectralCube.read(datadir+'H2CO_303_202.fits')
 a1=a.to(u.K, equivalencies=a.beam.jtok_equiv(a.header['RESTFRQ']*u.Hz))
-a2=a1.with_spectral_unit(u.Hz)
+a2=a1.with_spectral_unit(u.GHz)
 
 b=SpectralCube.read(datadir+'H2CO_322_221.fits')
 b1=b.to(u.K, equivalencies=b.beam.jtok_equiv(b.header['RESTFRQ']*u.Hz))
-b2=b1.with_spectral_unit(u.Hz)
+b2=b1.with_spectral_unit(u.GHz)
 
 
 c=SpectralCube.read(datadir+'H2CO_321_220.fits')
 c1=c.to(u.K, equivalencies=c.beam.jtok_equiv(c.header['RESTFRQ']*u.Hz))
-c2=c1.with_spectral_unit(u.Hz)
+c2=c1.with_spectral_unit(u.GHz)
 
 #create a table to store the spectrum parameters
 column_names=['x', 'y', 'temp', 'column', 'density', 'center', 'width', 'temp errors', 'column errors', 'density errors', 'center errors', 'width errors']
@@ -58,8 +58,8 @@ column_types=['f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 
 table=Table(names=column_names, dtype=column_types)
 
 #v, w correspond to x,y. xmax, ymax=209,336
-for v in range(140,290):
-	for w in range(260,480):
+for v in range(200,220):
+	for w in range(320,340):
 #combine three lines into one spectrum by concatenating numpy arrays, y-y axis,x-x axis 
 		y=np.concatenate((a2[:, w, v].value, b2[:, w, v].value, c2[:, w, v].value))
 		x=np.concatenate((a2.spectral_axis.value, b2.spectral_axis.value, 			c2.spectral_axis.value))

@@ -2,6 +2,7 @@
 from astropy.io import fits
 from spectral_cube import SpectralCube
 from astropy.wcs.utils import add_stokes_axis_to_wcs
+import radio_beam
 
 #shortcuts to get the right directory
 pa='/mnt/fastdata/pafreema/'
@@ -44,7 +45,7 @@ exportfits(imagename=tppr+'_regrid.spw'+spw+'.I.sd.image', fitsimage=tppr+'_regr
 flux=SpectralCube.read(pa+line+'_fullchannelflux.fits')
 flux.allow_huge_operations=True
 sd=SpectralCube.read(tppr+'_regrid.spw'+spw+'.I.sd.fits')
-end.allow_huge_operations=True
+sd.allow_huge_operations=True
 end=flux*sd
 
 #need to add a 4th axis - Stokes and modify the headers to match the ones of the original sd file
@@ -68,7 +69,7 @@ hdu.header['OBSRA']=a.header['OBSRA']
 hdu.header['VELREF']=a.header['VELREF']
 
 os.system("rm -rf tpp+'fluxmultregrid.spw'+spw+'.I.sd.fits'")
-hdu.writeto(tpp+'fluxmultregrid.spw'+spw+'.I.sd.fits')
+hdu.writeto(tpp+'fluxmultregrid.spw'+spw+'.I.sd.fits', clobber=clobber)
 
 #get back to a good casa image by imtrans twice
 os.system("rm -rf tpp+'fluxmultregrid.spw'+spw+'.I.sd.image'")

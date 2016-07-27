@@ -7,6 +7,7 @@ import numpy as np
 import scipy.ndimage as nd
 import astropy.table
 from astropy.table import Table
+import matplotlib.pyplot as plt
 
 #read in model grids to create H2CO radex fitter
 #grids use the radex program to calculate brightness of H2CO under different conditions
@@ -34,7 +35,7 @@ formaldehyde_radex_fitter_both=models.model.SpectralModel(models.formaldehyde_mm
 
 datadir = '/mnt/fastdata/pafreema/'
 #get spectra, into units of K and GHz
-tmax=pyfits.getdata(datadir+'H2CO_303_202_out.fits')
+tmax=pyfits.getdata(datadir+'H2CO_303_202_withtptmax.fits')
 #create mask - makes a 2D map
 cutoff=0.02
 mask=tmax>cutoff
@@ -54,19 +55,19 @@ keep=nd.morphology.binary_dilation(keep,disk)
 
 peakloc=np.nanargmax(tmax*keep)
 ymax,xmax=np.unravel_index(peakloc, tmax.shape)
+print(xmax, ymax)
 
-
-a=SpectralCube.read(datadir+'H2CO_303_202.fits')
+a=SpectralCube.read(datadir+'H2CO_303_202_withtp.fits')
 a1=a.to(u.K, equivalencies=a.beam.jtok_equiv(a.header['RESTFRQ']*u.Hz))
 a2=a1.with_spectral_unit(u.Hz)
 a3=a2.with_mask(keep)
 
-b=SpectralCube.read(datadir+'H2CO_322_221.fits')
+b=SpectralCube.read(datadir+'H2CO_322_221_withtp.fits')
 b1=b.to(u.K, equivalencies=b.beam.jtok_equiv(b.header['RESTFRQ']*u.Hz))
 b2=b1.with_spectral_unit(u.Hz)
 b3=b2.with_mask(keep)
 
-c=SpectralCube.read(datadir+'H2CO_321_220.fits')
+c=SpectralCube.read(datadir+'H2CO_321_220_withtp.fits')
 c1=c.to(u.K, equivalencies=c.beam.jtok_equiv(c.header['RESTFRQ']*u.Hz))
 c2=c1.with_spectral_unit(u.Hz)
 c3=c2.with_mask(keep)
@@ -76,24 +77,22 @@ column_names=['x', 'y', 'temp', 'column', 'density', 'center', 'width', 'temp er
 column_types=['f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4']
 table=Table(names=column_names, dtype=column_types)
 
-import pdb;pdb.set_trace()
-
-#v, w correspond to x,y. xmax, ymax=209,336
-for v in range(140,290):
-	for w in range(260,480):
+#v, w correspond to x,y. - range (260, 460) (400, 600)?
+for v in range(260, 460):
+	for w in range(400, 600):
 #combine three lines into one spectrum by concatenating numpy arrays, y-y axis,x-x axis 
 		v1=np.concatenate((a3[:, w, v].value, b3[:, w, v].value, c3[:, w, v].value))
 		w1=np.concatenate((a3.spectral_axis.value, b3.spectral_axis.value, 			c3.spectral_axis.value))
 #need to take only values in concatenation and add units with xarrkwargs below
 		w1 /= 1e9
 		sp=pyspeckit.Spectrum(data=v1, xarr=w1, unit="$T_B$ (K)",xarrkwargs={'unit':'GHz'})
-
 #add (register) fitters to the spectrum
 		sp.Registry.add_fitter('formaldehyde_mm_radex', formaldehyde_radex_fitter_both, 5)
 
 #plot fit for all 3 ('both')
 		sp.plotter(figure=1)
-		sp.specfit(fittype='formaldehyde_mm_radex', guesses=[95, 12.5, 4.5, 67, 5.0], limits=[(50,250), (11,15), (3,5.5), (65,70), (0.5,10)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
+		sp.specfit(fittype='formaldehyde_mm_radex', guesses=[95, 14.5, 4.5, 67, 4.0], limits=[(50,250), (11,17), (3,5.5), (65,70), (0.5,10)], limited=[(True, True)]*5, fixed=[False, False, False, False, False])
+
 #only change center parameter from example
 #sp.plotter.savefig('H2CO_all_radexfit.pdf')
 		table.add_row()
@@ -109,8 +108,13 @@ for v in range(140,290):
 		table[-1]['density errors']=sp.specfit.modelerrs[2]
 		table[-1]['center errors']=sp.specfit.modelerrs[3]
 		table[-1]['width errors']=sp.specfit.modelerrs[4]
-		
 table.write('grs1915H2COparameters.fits', overwrite=True)
+
+plt.show()
+t=Table.read('grs1915H2COparameters.fits')
+plt.scatter(t['x'], t['y'], c=t['temp'], marker='o', cmap='hot', edgecolor='none')
+plt.colorbar(label='Temperature(K)')
+plt.savefig('grs1915H2COtempmap.png')
 
 	
 

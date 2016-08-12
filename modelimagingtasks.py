@@ -94,15 +94,6 @@ myimsize=800
 mycell='0.2arcsec'
 myrestfreq='220.36868GHz'
 
-#12CO - spw 17 - myspw 0 - freq 230.538GHz - mynchan 80 mystart 250
-#13CO - spw 33 - myspw 8 - freq 220.39868GHz - mynchan 60 mystart 50
-#C18O - spw 31 - myspw 7 - freq 219.56035GHz - mynchan 60 mystart 160
-#303-202 - spw 25 - myspw 4 - freq 218.22219GHz - mynchan 100 mystart 400 (full clean nchan 480 start 240)
-#322-221 - spw 27 - myspw 5 - freq 218.47563GHz - mynchan 200 mystart 430 (full clean nchan 480 start 240)
-#321-220 - spw 29 - myspw 6 - freq 218.76007GHz - mynchan 100 mystart 400 (full clean nchan 480 start 240)
-#H30a - spw 21 - myspw 2 - freq 231.90093GHz - mynchan 80 mystart 80
-#SiO - spw 23 - myspw 3 - freq 217.105 - (full clean nchan 480 start 240)
-
 
 clean(vis=["/mnt/bigdata/pafreema/calibrated_final.ms", "/mnt/bigdata/pafreema/calib_MS_7m/calibrated_final.ms"],imagename=line+"_combinewithtp",outlierfile="",field=['4~36', '5~18'],spw=myspw, selectdata=True,timerange="",uvrange="",antenna="",scan="",observation="",intent="",  mode="channel",resmooth=False,gridmode="",wprojplanes=-1,facets=1,cfcache="cfcache.dir", rotpainc=5.0,painc=360.0,aterm=True,psterm=False,mterm=True,wbawp=False,conjbeams=True, epjtable="",interpolation="linear", niter=myniter,gain=0.1,threshold=mythreshold,psfmode="clark",imagermode="csclean", ftmachine="mosaic",mosweight=False,scaletype="SAULT",multiscale=[0, 1, 5, 10, 15], negcomponent=-1,smallscalebias=0.6, interactive=False,mask=[], nchan=mynchan,start=mystart,width=mywidth,outframe="lsrk",veltype="radio", imsize=[myimsize, myimsize],cell=mycell, phasecenter="J2000 19h15m38.305s 10d41m01.018s", restfreq=myrestfreq, stokes="I",weighting="natural",robust=0.0,uvtaper=False,outertaper=[''],innertaper=['1.0'],modelimage=tpp+'fluxmultregrid1.spw'+spw+'.I.sd.image', restoringbeam=[''], pbcor=True,minpb=0.2,usescratch=False,noise="1.0Jy", npixels=0,npercycle=100,cyclefactor=2.0,cyclespeedup=-1,nterms=1,reffreq="",chaniter=False, flatnoise=True,allowchunk=False)
 

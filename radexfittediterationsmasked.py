@@ -35,7 +35,7 @@ formaldehyde_radex_fitter_both=models.model.SpectralModel(models.formaldehyde_mm
 
 datadir = '/mnt/fastdata/pafreema/'
 #get spectra, into units of K and GHz
-tmax=pyfits.getdata(datadir+'H2CO_303_202_withtptmax.fits')
+tmax=pyfits.getdata(datadir+'H2CO_303_202_tmax.fits')
 #create mask - makes a 2D map
 cutoff=0.02
 mask=tmax>cutoff
@@ -57,17 +57,17 @@ peakloc=np.nanargmax(tmax*keep)
 ymax,xmax=np.unravel_index(peakloc, tmax.shape)
 print(xmax, ymax)
 
-a=SpectralCube.read(datadir+'H2CO_303_202_withtp.fits')
+a=SpectralCube.read(datadir+'H2CO_303_202_combinewithtp.fits')
 a1=a.to(u.K, equivalencies=a.beam.jtok_equiv(a.header['RESTFRQ']*u.Hz))
 a2=a1.with_spectral_unit(u.Hz)
 a3=a2.with_mask(keep)
 
-b=SpectralCube.read(datadir+'H2CO_322_221_withtp.fits')
+b=SpectralCube.read(datadir+'H2CO_322_221_combinewithtp.fits')
 b1=b.to(u.K, equivalencies=b.beam.jtok_equiv(b.header['RESTFRQ']*u.Hz))
 b2=b1.with_spectral_unit(u.Hz)
 b3=b2.with_mask(keep)
 
-c=SpectralCube.read(datadir+'H2CO_321_220_withtp.fits')
+c=SpectralCube.read(datadir+'H2CO_321_220_combinewithtp.fits')
 c1=c.to(u.K, equivalencies=c.beam.jtok_equiv(c.header['RESTFRQ']*u.Hz))
 c2=c1.with_spectral_unit(u.Hz)
 c3=c2.with_mask(keep)
@@ -77,9 +77,9 @@ column_names=['x', 'y', 'temp', 'column', 'density', 'center', 'width', 'temp er
 column_types=['f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4']
 table=Table(names=column_names, dtype=column_types)
 
-#v, w correspond to x,y. - range (260, 460) (400, 600)?
-for v in range(260, 460):
-	for w in range(400, 600):
+#v, w correspond to x,y. - range [300, 425] [400, 550] - max (330,535)
+for v in range(300, 425):
+	for w in range(400, 550):
 #combine three lines into one spectrum by concatenating numpy arrays, y-y axis,x-x axis 
 		v1=np.concatenate((a3[:, w, v].value, b3[:, w, v].value, c3[:, w, v].value))
 		w1=np.concatenate((a3.spectral_axis.value, b3.spectral_axis.value, 			c3.spectral_axis.value))
@@ -114,7 +114,7 @@ plt.show()
 t=Table.read('grs1915H2COparameters.fits')
 plt.scatter(t['x'], t['y'], c=t['temp'], marker='o', cmap='hot', edgecolor='none')
 plt.colorbar(label='Temperature(K)')
-plt.savefig('grs1915H2COtempmap.png')
+plt.savefig('grs1915H2COtempmap.pdf')
 
 	
 
